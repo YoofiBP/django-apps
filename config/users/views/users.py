@@ -1,12 +1,12 @@
 from django.http import Http404
-
-# Create your views here.
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-from .models import User
-from .serializers import UserSerializer
+from ..models import User
+from ..serializers import UserSerializer
 
 
 class UserList(APIView):
@@ -23,6 +23,9 @@ class UserList(APIView):
 
 
 class UserDetail(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, id):
         try:
             return User.objects.get(pk=id)
